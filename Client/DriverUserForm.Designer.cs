@@ -27,11 +27,6 @@ partial class DriverUserForm {
 	/// </summary>
 	private void InitializeComponent() {
 		mainPanel = new System.Windows.Forms.Panel();
-		menuPanel = new System.Windows.Forms.Panel();
-		panel1 = new System.Windows.Forms.Panel();
-		panel2 = new System.Windows.Forms.Panel();
-		label1 = new System.Windows.Forms.Label();
-		onlineCheckBox = new System.Windows.Forms.CheckBox();
 		tripPanel = new System.Windows.Forms.Panel();
 		userNameText = new System.Windows.Forms.Label();
 		foundUserPanel = new System.Windows.Forms.Panel();
@@ -40,12 +35,18 @@ partial class DriverUserForm {
 		label5 = new System.Windows.Forms.Label();
 		label2 = new System.Windows.Forms.Label();
 		completeDriveButton = new System.Windows.Forms.Button();
+		menuPanel = new System.Windows.Forms.Panel();
+		panel1 = new System.Windows.Forms.Panel();
+		panel2 = new System.Windows.Forms.Panel();
+		label1 = new System.Windows.Forms.Label();
+		onlineCheckBox = new System.Windows.Forms.CheckBox();
 		mainPanel.SuspendLayout();
-		menuPanel.SuspendLayout();
-		panel2.SuspendLayout();
 		tripPanel.SuspendLayout();
 		foundUserPanel.SuspendLayout();
 		completePanel.SuspendLayout();
+		menuPanel.SuspendLayout();
+		panel1.SuspendLayout();
+		panel2.SuspendLayout();
 		SuspendLayout();
 
 		// 
@@ -59,59 +60,6 @@ partial class DriverUserForm {
 		mainPanel.Name = "mainPanel";
 		mainPanel.Size = new System.Drawing.Size(464, 815);
 		mainPanel.TabIndex = 0;
-
-		// 
-		// menuPanel
-		// 
-		menuPanel.BackColor = System.Drawing.Color.Transparent;
-		menuPanel.Controls.Add(panel1);
-		menuPanel.Controls.Add(panel2);
-		menuPanel.Location = new System.Drawing.Point(0, 571);
-		menuPanel.Name = "menuPanel";
-		menuPanel.Size = new System.Drawing.Size(464, 244);
-		menuPanel.TabIndex = 1;
-
-		// 
-		// panel1
-		// 
-		panel1.BackColor = System.Drawing.SystemColors.Control;
-		panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-		panel1.Location = new System.Drawing.Point(0, 124);
-		panel1.Name = "panel1";
-		panel1.Size = new System.Drawing.Size(464, 120);
-		panel1.TabIndex = 0;
-
-		// 
-		// panel2
-		// 
-		panel2.BackColor = System.Drawing.SystemColors.Control;
-		panel2.Controls.Add(label1);
-		panel2.Controls.Add(onlineCheckBox);
-		panel2.Location = new System.Drawing.Point(12, 21);
-		panel2.Name = "panel2";
-		panel2.Size = new System.Drawing.Size(440, 77);
-		panel2.TabIndex = 0;
-
-		// 
-		// label1
-		// 
-		label1.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
-		label1.Location = new System.Drawing.Point(83, 14);
-		label1.Name = "label1";
-		label1.Size = new System.Drawing.Size(354, 47);
-		label1.TabIndex = 1;
-		label1.Text = "Bạn hiện đang online";
-		label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
-		// 
-		// onlineCheckBox
-		// 
-		onlineCheckBox.Location = new System.Drawing.Point(12, 17);
-		onlineCheckBox.Name = "onlineCheckBox";
-		onlineCheckBox.Size = new System.Drawing.Size(60, 44);
-		onlineCheckBox.TabIndex = 0;
-		onlineCheckBox.UseVisualStyleBackColor = true;
-		onlineCheckBox.CheckedChanged += onlineCheckBox_CheckedChanged;
 
 		// 
 		// tripPanel
@@ -207,6 +155,59 @@ partial class DriverUserForm {
 		completeDriveButton.Click += completeDriveButton_Click;
 
 		// 
+		// menuPanel
+		// 
+		menuPanel.BackColor = System.Drawing.Color.Transparent;
+		menuPanel.Controls.Add(panel1);
+		menuPanel.Location = new System.Drawing.Point(0, 571);
+		menuPanel.Name = "menuPanel";
+		menuPanel.Size = new System.Drawing.Size(464, 244);
+		menuPanel.TabIndex = 1;
+
+		// 
+		// panel1
+		// 
+		panel1.BackColor = System.Drawing.SystemColors.Control;
+		panel1.Controls.Add(panel2);
+		panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+		panel1.Location = new System.Drawing.Point(0, 124);
+		panel1.Name = "panel1";
+		panel1.Size = new System.Drawing.Size(464, 120);
+		panel1.TabIndex = 0;
+
+		// 
+		// panel2
+		// 
+		panel2.BackColor = System.Drawing.SystemColors.Control;
+		panel2.Controls.Add(label1);
+		panel2.Controls.Add(onlineCheckBox);
+		panel2.Location = new System.Drawing.Point(12, 21);
+		panel2.Name = "panel2";
+		panel2.Size = new System.Drawing.Size(440, 77);
+		panel2.TabIndex = 0;
+
+		// 
+		// label1
+		// 
+		label1.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
+		label1.Location = new System.Drawing.Point(83, 14);
+		label1.Name = "label1";
+		label1.Size = new System.Drawing.Size(354, 47);
+		label1.TabIndex = 1;
+		label1.Text = "Bạn hiện đang online";
+		label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+		// 
+		// onlineCheckBox
+		// 
+		onlineCheckBox.Location = new System.Drawing.Point(12, 17);
+		onlineCheckBox.Name = "onlineCheckBox";
+		onlineCheckBox.Size = new System.Drawing.Size(60, 44);
+		onlineCheckBox.TabIndex = 0;
+		onlineCheckBox.UseVisualStyleBackColor = true;
+		onlineCheckBox.CheckedChanged += onlineCheckBox_CheckedChanged;
+
+		// 
 		// DriverUserForm
 		// 
 		AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -216,11 +217,12 @@ partial class DriverUserForm {
 		StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 		Text = "DriverUserForm";
 		mainPanel.ResumeLayout(false);
-		menuPanel.ResumeLayout(false);
-		panel2.ResumeLayout(false);
 		tripPanel.ResumeLayout(false);
 		foundUserPanel.ResumeLayout(false);
 		completePanel.ResumeLayout(false);
+		menuPanel.ResumeLayout(false);
+		panel1.ResumeLayout(false);
+		panel2.ResumeLayout(false);
 		ResumeLayout(false);
 	}
 

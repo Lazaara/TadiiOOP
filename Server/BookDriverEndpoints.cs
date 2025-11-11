@@ -1,85 +1,80 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Server.Xml;
 
 namespace Server;
 
 public static class BookDriverEndpoints {
     public static IEndpointRouteBuilder MapBookDriverEndpoints(this IEndpointRouteBuilder app) {
         RouteGroupBuilder group = app.MapGroup("/book").RequireAuthorization();
-        
+
         // POST /book/driver
         group.MapPost("/driver", async (
             [FromBody] BookDriverRequest body,
-            IDatabaseController db,
             IHubContext<DriverHub> hub,
             ClaimsPrincipal user,
             CancellationToken ct) => {
-            // Basic validation
-            if (!body.IsValid()) return Results.BadRequest(new { error = "Invalid coordinates." });
+            // 1) Validate
+            if (!body.IsValid())
+                return Results.BadRequest(new { error = "Invalid coordinates." });
 
-            string riderEmail = user.FindFirstValue(ClaimTypes.NameIdentifier)
-                                ?? user.FindFirstValue(ClaimTypes.Email)
-                                ?? "";
+            string? riderEmail = user.FindFirstValue(ClaimTypes.NameIdentifier)
+                                 ?? user.FindFirstValue(ClaimTypes.Email)
+                                 ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(riderEmail))
                 return Results.Unauthorized();
 
+            // 2) Poll XML for any available driver (online + DriverUser)
             TimeSpan interval = TimeSpan.FromMilliseconds(900);
-
-            // Resolve DriverUser type id once
-            int driverTypeId = await db.ScalarAsync<int>(@"
-                SELECT UserTypeID FROM UserType WHERE TypeName = 'DriverUser' LIMIT 1;
-            ");
-
-            // Poll until we find and claim a driver or timeout
             string? claimedDriverEmail = null;
 
             while (!ct.IsCancellationRequested) {
-                List<Dictionary<string, object>> rows = await db.QueryAsync(@"
-                    SELECT 
-                        u.email
-                    FROM users u
-                    WHERE u.UserTypeID = @driverTypeId
-                      AND u.IsOnline = 1
-                    LIMIT 1;",
-                    new() {
-                        ["@driverTypeId"] = driverTypeId
-                    });
+                List<User> users = UserXmlStorage.LoadAll();
 
-                if (rows.Count == 0) {
-                    // none available right now → wait and retry
-                    await Task.Delay(interval, ct);
-                    continue;
+                // Find first online driver (case-insensitive), skip the rider themself
+                User? driver = users
+                               .Where(u => u is DriverUser)
+                               .Where(u => u.IsOnline)
+                               .FirstOrDefault(u =>
+                                   !string.Equals(u.Email, riderEmail, StringComparison.OrdinalIgnoreCase));
+
+                if (driver != null) {
+                    claimedDriverEmail = driver.Email;
+                    break;
                 }
 
-                string driverEmail = Convert.ToString(rows[0]["email"]) ?? "";
-
-                claimedDriverEmail = driverEmail;
-                break;
+                await Task.Delay(interval, ct);
             }
 
-            if (ct.IsCancellationRequested) {
-                return Results.Unauthorized();
-            }
+            if (ct.IsCancellationRequested)
+                return Results.Unauthorized(); // client canceled
 
             if (claimedDriverEmail is null)
-                return Results.StatusCode(503); // Service Unavailable (no driver found in time)
+                return Results.StatusCode(503); // no driver found
 
-            // 4) Return booking info + driver info
+            // 3) Prepare response + push payload
             BookDriverResponse resp = new BookDriverResponse(
-                DriverEmail: claimedDriverEmail!,
+                DriverEmail: claimedDriverEmail,
                 BookingToken: Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(16))
             );
-            
+
             DriverAssignedPush push = new DriverAssignedPush(
                 RiderEmail: riderEmail,
                 StartLat: body.StartLat, StartLng: body.StartLng,
                 EndLat: body.EndLat, EndLng: body.EndLng
             );
-            
+
+            // 4) Notify the driver group by email (no JWT flow required)
             await hub.Clients
-                     .Group($"driver:{claimedDriverEmail!.Trim().ToLowerInvariant()}")
+                     .Group($"driver:{claimedDriverEmail.Trim().ToLowerInvariant()}")
                      .SendAsync("DriverAssigned", push, ct);
 
             return Results.Ok(resp);
@@ -106,10 +101,12 @@ public static class BookDriverEndpoints {
         string DriverEmail,
         string BookingToken
     );
-    
+
     public sealed record DriverAssignedPush(
         string RiderEmail,
-        double StartLat, double StartLng,
-        double EndLat, double EndLng
+        double StartLat,
+        double StartLng,
+        double EndLat,
+        double EndLng
     );
 }

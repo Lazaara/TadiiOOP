@@ -63,6 +63,7 @@ public partial class DriverUserForm : Form {
 
 	private async void DriveProcess() {
 		// menuPanel.Hide();
+		
 		tripPanel.BeginInvoke((Action)(() => tripPanel.Visible = true));
 		
 		foundUserPanel.BeginInvoke((Action)(() => foundUserPanel.Visible = true));
@@ -74,6 +75,8 @@ public partial class DriverUserForm : Form {
 		foundUserPanel.BeginInvoke((Action)(() => foundUserPanel.Visible = false));
 		completePanel.BeginInvoke((Action)(() => completePanel.Visible = true));
 		completeDriveButton.BeginInvoke((Action)(() => completeDriveButton.Visible = true));
+
+		await UserController.Instance.IncreaseTotalTripsAsync();
 	}
 	
 	private void completeDriveButton_Click(object sender, EventArgs e) {

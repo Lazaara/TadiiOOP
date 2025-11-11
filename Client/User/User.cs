@@ -1,17 +1,16 @@
-﻿namespace Client.User;
+﻿using Server;
+using Server.Xml;
 
-public class User {
-	public bool IsLoaded { get; private set; }
-	public int Id { get; private set; }
+namespace Client.User;
+
+public abstract class User {
 	public string Email { get; private set; }
 	public bool IsOnline { get; set; }
-	public EUserType UserType { get; private set; }
+	
+	public abstract EUserType UserType { get; }
 
-	public User(UserResponse userResponse) {
-		Id = userResponse.Id;
+	protected User(UserDto userResponse) {
 		Email = userResponse.Email;
-		IsOnline = userResponse.IsOnline != 0;
-		UserType = (EUserType)userResponse.UserTypeID!;
-		IsLoaded = true;
+		IsOnline = userResponse.IsOnline;
 	}
 }

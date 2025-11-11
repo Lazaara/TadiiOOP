@@ -24,7 +24,7 @@ public partial class NormalUserForm : Form {
 	private bool onConfirmBooking;
 	private bool isFindingDriver;
 
-	private User.User? driverUser;
+	private User.DriverUser? driverUser;
 
 	public NormalUserForm() {
 		InitializeComponent();
@@ -109,6 +109,11 @@ public partial class NormalUserForm : Form {
 	    else {
 		    findCurrentLocation = true;
 	    }
+
+
+	    // Delay to prevent mass request to GMap that can violate their policies
+	    await Task.Delay(TimeSpan.FromSeconds(2f));
+	    
 	    
 	    PointLatLng? direction = await Geocoder.GeocodeAsync(targetLocationTextBox.Text, new CancellationTokenSource().Token);
 	    
@@ -270,9 +275,9 @@ public partial class NormalUserForm : Form {
 			return;
 		}
 
-		Result<UserResponse> driverRes = await UserController.Instance.GetUserInformationAsync(res.Value.DriverEmail);
+		Result<UserDto> driverRes = await UserController.Instance.GetUserInformationAsync(res.Value.DriverEmail);
 		if (driverRes.IsSuccess) {
-			driverUser = new User.User(driverRes.Value);
+			driverUser = new User.DriverUser(driverRes.Value);
 		}
 		
 		ToFoundDriver();

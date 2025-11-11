@@ -1,6 +1,7 @@
 ﻿using Client.Auth;
 using Client.Net;
 using Client.User;
+using Server.Xml;
 
 namespace Client;
 
@@ -40,7 +41,6 @@ public partial class LoginForm : Form {
 		new UserController(ApiClientController.Api);
 		Result<bool> res = await UserController.Instance.UpdateUserInformationAsync(username);
 
-		Console.WriteLine(UserController.Instance.User.Id);
 		Console.WriteLine(UserController.Instance.User.Email);
 		Console.WriteLine(UserController.Instance.User.IsOnline);
 		Console.WriteLine(UserController.Instance.User.UserType);

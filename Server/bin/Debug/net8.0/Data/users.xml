@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfUser xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <User xsi:type="NormalUser">
+    <Email>0833666722</Email>
+    <PasswordHash>$2b$10$xgBdRu879FzLXIrPWdEqf.cY0h0pSf5SkqSYs10rOsFovo2hqSY/a</PasswordHash>
+    <IsOnline>false</IsOnline>
+  </User>
+  <User xsi:type="DriverUser">
+    <Email>0845869727</Email>
+    <PasswordHash>$2b$10$3FLb7kCTJ78hr.BOIbRfcucqqFcsHJZ.gx1NLrzV7UNX9tTkhHqAy</PasswordHash>
+    <IsOnline>false</IsOnline>
+    <Rating>4.9</Rating>
+    <TotalTrips>0</TotalTrips>
+  </User>
+</ArrayOfUser>

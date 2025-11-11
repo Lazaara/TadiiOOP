@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GMap.NET.WinForms" Version="2.1.7" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0-rc.2.25502.107" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="LoginForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="NormalUserForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="DriverUserForm.cs">
+        <SubType>Form</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Server\Server.csproj" />
+    </ItemGroup>
+
+</Project>
